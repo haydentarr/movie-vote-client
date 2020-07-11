@@ -15,7 +15,7 @@ const App: React.FC = () => {
   useMemo(() => {
     // Perhaps add refresh here
     if (state.user.role === "guest" || null) handleGuest(dispatch);
-  }, []);
+  }, [state.user.role]);
 
   return (
     <AuthProvider value={[state, dispatch]}>

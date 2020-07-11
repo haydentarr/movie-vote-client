@@ -2,7 +2,6 @@
   "name": "movie-vote",
   "version": "0.1.0",
   "private": true,
-  "homepage": "./",
   "dependencies": {
     "@bumaga/tabs": "^0.2.0",
     "@testing-library/jest-dom": "^4.2.4",

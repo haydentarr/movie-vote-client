@@ -7,7 +7,7 @@ import {
   Dispatch,
 } from "react";
 import authContext from "../auth/context";
-import { handleRefresh, isAuthenticated } from "../auth/actions";
+import { isAuthenticated } from "../auth/actions";
 import BASE_URL from "../utils/config";
 
 interface IRank {
@@ -16,7 +16,7 @@ interface IRank {
 }
 
 export const MovieApi = (): [
-  object[],
+  any,
   boolean,
   Dispatch<SetStateAction<IRank | null>>,
   any,
@@ -24,8 +24,8 @@ export const MovieApi = (): [
   const [state, dispatch]: any = useContext(authContext); // Needs a typescript type
 
   // Might be better as a reducer
-  const [isFetching, setFetching] = useState(true);
   const [data, setData] = useState();
+  const [isFetching, setFetching] = useState(true);
   const [newRank, setRank] = useState<IRank | null>(null);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const MovieApi = (): [
 
     if (state.user.accessToken) fetchMovie(state, setFetching, setData);
     if (newRank !== null) rankMovie(state, setFetching, newRank);
-  }, [state.isAuthenticated, newRank]);
+  }, [state, dispatch, newRank]);
 
   return [data, isFetching, setRank, state.errorMessage];
 };
@@ -50,7 +50,7 @@ export const MovieApi = (): [
 const fetchMovie = async (
   state: any,
   setFetching: Dispatch<SetStateAction<boolean>>,
-  setData: Dispatch<SetStateAction<object[]>>,
+  setData: Dispatch<SetStateAction<any>>,
 ) => {
   try {
     setFetching(true);

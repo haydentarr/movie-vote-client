@@ -4,7 +4,7 @@ import authContext from "../auth/context";
 import { handleRefresh } from "../auth/actions";
 import BASE_URL from "../utils/config";
 
-export const LeaderboardApi = (): [object[], boolean] => {
+export const LeaderboardApi = (): [any, boolean] => {
   const [state, dispatch]: any = useContext(authContext); // Needs a typescript type
 
   // Might be better as a reducer
@@ -33,7 +33,7 @@ export const LeaderboardApi = (): [object[], boolean] => {
 const fetchList = async (
   state: any,
   setFetching: Dispatch<SetStateAction<boolean>>,
-  setData: Dispatch<SetStateAction<object[]>>,
+  setData: Dispatch<SetStateAction<any>>,
 ) => {
   try {
     setFetching(true);
