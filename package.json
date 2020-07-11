@@ -2,6 +2,7 @@
   "name": "movie-vote",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@bumaga/tabs": "^0.2.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -20,7 +21,7 @@
     "validator": "^12.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_API=https://movie-vote-client-9719.ondigitalocean.app/api/api react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
