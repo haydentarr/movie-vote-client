@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "REACT_APP_API=https://movie-vote-client-9719.ondigitalocean.app/api/api react-scripts start",
-    "build": "react-scripts build",
+    "build": "REACT_APP_API=https://movie-vote-client-9719.ondigitalocean.app/api/api react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
