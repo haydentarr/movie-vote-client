@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import BASE_URL from "../utils/config";
 
 // import { BASE_UR } from "./routes.ts"
+//
 
 function requestLogin(creds?: { email: string; password: string }) {
   return {
@@ -60,10 +61,15 @@ export const handleRefresh = async (dispatch: any) => {
       method: "GET",
       credentials: "include",
     });
+    console.log(res);
+    if (!res.ok) {
+      throw Error(res.statusText);
+    }
     // START TIMER FOR ACCESS TOKEN, EXPIRY SHOULD BE SENT WITH ACCESS TOKEN
 
     const json = await res.json();
     const decodedJwt: any = jwt.decode(json.accessToken);
+
     const user = {
       accessToken: json.accessToken,
       role: "guest",
@@ -76,6 +82,7 @@ export const handleRefresh = async (dispatch: any) => {
 
     dispatch(receiveLogin(payload));
   } catch (err) {
+    console.log(err);
     dispatch(loginError(err));
   }
 };
@@ -109,7 +116,7 @@ export const handleLogin = (creds: any) => {
     dispatch(requestLogin(creds));
 
     return fetch(`${BASE_URL}/auth/login`, config)
-      .then(response => response.json().then(user => ({ user, response })))
+      .then((response) => response.json().then((user) => ({ user, response })))
       .then(({ user, response }) => {
         if (!response.ok) {
           // If there was a problem, we want to
@@ -127,7 +134,7 @@ export const handleLogin = (creds: any) => {
           dispatch(receiveLogin(payload));
         }
       })
-      .catch(err => dispatch(loginError(err)));
+      .catch((err) => dispatch(loginError(err)));
   };
 };
 

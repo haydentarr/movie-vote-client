@@ -39,10 +39,11 @@ export const MovieApi = (): [
       refreshToken();
       return;
     }
+    console.log(state.errorMessage);
 
     if (state.user.accessToken) fetchMovie(state, setFetching, setData);
     if (newRank !== null) rankMovie(state, setFetching, newRank);
-  }, [state, dispatch, newRank]);
+  }, [state, state.user.accessToken, state.errorMessage, dispatch, newRank]);
 
   return [data, isFetching, setRank, state.errorMessage];
 };
