@@ -20,6 +20,12 @@ function receiveLogin(payload: any) {
   };
 }
 
+function requestRefresh() {
+  return {
+    type: LOGIN.REFRESHING,
+  };
+}
+
 const loginError = (payload: object) => {
   return {
     type: LOGIN.ERROR,
@@ -30,6 +36,7 @@ const loginError = (payload: object) => {
 // ADD GUEST USER FUNCTION handleGuest()
 export const handleGuest = async (dispatch: any) => {
   try {
+    console.log("guest starting");
     dispatch(requestLogin());
     const res = await fetch(`${BASE_URL}/auth/guest`, {
       method: "GET",
@@ -56,12 +63,14 @@ export const handleGuest = async (dispatch: any) => {
 
 export const handleRefresh = async (dispatch: any) => {
   try {
-    dispatch(requestLogin());
+    console.log("refresh started");
+    dispatch(requestRefresh());
     const res = await fetch(`${BASE_URL}/auth/refresh`, {
       method: "GET",
       credentials: "include",
     });
     console.log(res);
+    // Crate generic error handling utility
     if (!res.ok) {
       throw Error(res.statusText);
     }
@@ -82,20 +91,17 @@ export const handleRefresh = async (dispatch: any) => {
 
     dispatch(receiveLogin(payload));
   } catch (err) {
-    console.log(err);
+    console.log("error");
     dispatch(loginError(err));
+    handleGuest(dispatch); // Relog them as a new guest
   }
 };
 
-export const isAuthenticated = async (state: any, dispatch: any) => {
+export const checkAuthentication = async (dispatch: any) => {
   try {
-    const expired = state.user.expires < Date.now() / 1000;
-    // Check to see if there are any errors as well to stop infinite loop
-    if (expired && !state.errorMessage) {
-      handleRefresh(dispatch);
-      return false;
-    }
-    return true;
+    console.log("refreshing");
+    handleRefresh(dispatch);
+    return false;
   } catch (err) {
     dispatch(loginError(err));
   }

@@ -7,7 +7,7 @@ import {
   Dispatch,
 } from "react";
 import authContext from "../auth/context";
-import { isAuthenticated } from "../auth/actions";
+import { checkAuthentication } from "../auth/actions";
 import BASE_URL from "../utils/config";
 
 interface IRank {
@@ -29,36 +29,63 @@ export const MovieApi = (): [
   const [newRank, setRank] = useState<IRank | null>(null);
 
   useEffect(() => {
-    if (state.user.expires < Date.now() / 1000 && !state.errorMessage) {
+    // NEEDS MIDDLEWARE TO CHECK AUTH STATE
+    // IF FETCHING EITHER REFRESH OR LOGIN STOP
+    if (state.isFetching) return; // If fetching auth return
+    if (!state.isAuthenticated && state.errorMessage) {
+      // If error message is present, user failed authentication - restart guest session
+      setRank(null);
+      return;
+    }
+
+    if (
+      state.user.expires - Date.now() / 1000 < 2 &&
+      state.user.expires !== 0 &&
+      !state.errorMessage
+    ) {
+      // It's not currently refreshing and its about to expire refresh token
       // Refreshing a token changes state, so this needs to be returned or..
       // Rank and fetch movies will fail auth
       // Then run again which will work.
       const refreshToken = async () => {
-        await isAuthenticated(state, dispatch);
+        await checkAuthentication(dispatch);
       };
       refreshToken();
       return;
     }
-    console.log(state.errorMessage);
 
-    if (state.user.accessToken) fetchMovie(state, setFetching, setData);
-    if (newRank !== null) rankMovie(state, setFetching, newRank);
-  }, [state, state.user.accessToken, state.errorMessage, dispatch, newRank]);
+    if (state.user.accessToken) {
+      console.log("fetch movie");
+
+      fetchMovie(state.user.accessToken, setFetching, setData);
+    }
+    if (newRank !== null) {
+      console.log("rank movie");
+      rankMovie(state.user.accessToken, setFetching, newRank);
+    }
+  }, [
+    state.user.accessToken,
+    state.user.expires,
+    state.isFetching,
+    state.isAuthenticated,
+    state.errorMessage,
+    dispatch,
+    newRank,
+  ]);
 
   return [data, isFetching, setRank, state.errorMessage];
 };
 
 const fetchMovie = async (
-  state: any,
+  accessToken: string,
   setFetching: Dispatch<SetStateAction<boolean>>,
   setData: Dispatch<SetStateAction<any>>,
 ) => {
   try {
     setFetching(true);
-    console.log(state);
     const response = await fetch(`${BASE_URL}/matching`, {
       headers: {
-        Authorization: `Bearer ${state.user.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const result = await response.json();
@@ -71,7 +98,7 @@ const fetchMovie = async (
 };
 
 const rankMovie = async (
-  state: any,
+  accessToken: string,
   setFetching: Dispatch<SetStateAction<boolean>>,
   newRank: IRank,
 ) => {
@@ -83,7 +110,7 @@ const rankMovie = async (
     await fetch(`${BASE_URL}/matching?movies=${rank}`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${state.user.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     setFetching(false);

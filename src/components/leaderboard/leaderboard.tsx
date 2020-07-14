@@ -3,7 +3,6 @@ import { LeaderboardApi } from "./api";
 
 function MovieList(props: any) {
   const arr = props.movies;
-  console.log(Array.isArray(arr));
   return (
     <ul>
       {arr
