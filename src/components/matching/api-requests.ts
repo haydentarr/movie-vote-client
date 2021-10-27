@@ -19,7 +19,7 @@ export const MovieApi = (): [
   any,
   boolean,
   Dispatch<SetStateAction<IRank | null>>,
-  any,
+  any
 ] => {
   const [state, dispatch]: any = useContext(authContext); // Needs a typescript type
 
@@ -79,7 +79,7 @@ export const MovieApi = (): [
 const fetchMovie = async (
   accessToken: string,
   setFetching: Dispatch<SetStateAction<boolean>>,
-  setData: Dispatch<SetStateAction<any>>,
+  setData: Dispatch<SetStateAction<any>>
 ) => {
   try {
     setFetching(true);
@@ -100,7 +100,7 @@ const fetchMovie = async (
 const rankMovie = async (
   accessToken: string,
   setFetching: Dispatch<SetStateAction<boolean>>,
-  newRank: IRank,
+  newRank: IRank
 ) => {
   try {
     console.log(newRank);

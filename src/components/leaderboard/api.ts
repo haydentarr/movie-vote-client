@@ -52,7 +52,7 @@ export const LeaderboardApi = (): [any, boolean] => {
 const fetchList = async (
   accessToken: string,
   setFetching: Dispatch<SetStateAction<boolean>>,
-  setData: Dispatch<SetStateAction<any>>,
+  setData: Dispatch<SetStateAction<any>>
 ) => {
   try {
     setFetching(true);

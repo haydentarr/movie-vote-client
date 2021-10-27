@@ -8,7 +8,7 @@ function MovieList(props: any) {
       {arr
         .sort((a: any, b: any) => b.rank - a.rank)
         .map((value: any, idx: number) => (
-          <li key={idx}>
+          <li key={idx} color="black">
             <span>{value.name}</span>
             <span> - </span>
             <span>{value.rank}</span>

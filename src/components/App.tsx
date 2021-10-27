@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo } from "react";
+import React, { useReducer, useEffect } from "react";
 import { AuthProvider } from "./auth/context";
 import { userAuth, initialState } from "./auth/reducer";
 import { handleGuest } from "./auth/actions";
@@ -12,10 +12,10 @@ import "./App.css";
 
 const App: React.FC = () => {
   const [state, dispatch]: any = useReducer(userAuth, initialState);
-  useMemo(() => {
+  useEffect(() => {
     // Perhaps add refresh here
-    if (state.user.role === "guest" || null) handleGuest(dispatch);
-  }, [state.user.role]);
+    handleGuest(dispatch);
+  }, []);
 
   return (
     <AuthProvider value={[state, dispatch]}>

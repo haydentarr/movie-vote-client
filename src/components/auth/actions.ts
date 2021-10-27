@@ -1,6 +1,8 @@
 import { LOGIN } from "./types";
 import jwt from "jsonwebtoken";
 import BASE_URL from "../utils/config";
+const axios = require("axios");
+const axiosApiInstance = axios.create();
 
 // import { BASE_UR } from "./routes.ts"
 //
@@ -63,19 +65,18 @@ export const handleGuest = async (dispatch: any) => {
 
 export const handleRefresh = async (dispatch: any) => {
   try {
-    console.log("refresh started");
     dispatch(requestRefresh());
+    console.log(dispatch);
+
     const res = await fetch(`${BASE_URL}/auth/refresh`, {
       method: "GET",
       credentials: "include",
     });
-    console.log(res);
     // Crate generic error handling utility
     if (!res.ok) {
       throw Error(res.statusText);
     }
     // START TIMER FOR ACCESS TOKEN, EXPIRY SHOULD BE SENT WITH ACCESS TOKEN
-
     const json = await res.json();
     const decodedJwt: any = jwt.decode(json.accessToken);
 
@@ -93,7 +94,7 @@ export const handleRefresh = async (dispatch: any) => {
   } catch (err) {
     console.log("error");
     dispatch(loginError(err));
-    handleGuest(dispatch); // Relog them as a new guest
+    // handleGuest(dispatch); // Relog them as a new guest
   }
 };
 
