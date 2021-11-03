@@ -19,7 +19,7 @@
     "react-scripts": "3.4.1",
     "styled-components": "^4.4.1",
     "typescript": "~3.7.2",
-    "validator": "^12.1.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "start": "PORT=8080 react-scripts start",
